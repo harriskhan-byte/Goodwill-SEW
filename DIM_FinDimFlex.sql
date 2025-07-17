@@ -1,5 +1,5 @@
 SELECT
-    v.entityinstance    AS SYSTEM_KEY,
+    v.entityinstance    AS FinDimFlexKey,
     v.displayvalue      AS Flex,
     ft.[description]    AS FlexDescription
 FROM DIMENSIONATTRIBUTE a

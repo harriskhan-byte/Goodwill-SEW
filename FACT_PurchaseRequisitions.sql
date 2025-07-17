@@ -1,4 +1,4 @@
-SELECT 
+SELECT
 	prl.LINEAMOUNT AS Amount,
 	prl.PURCHQTY AS Quantity, 
 	prl.PURCHPRICE AS [Unit Price], 

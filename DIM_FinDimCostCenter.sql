@@ -1,5 +1,5 @@
 SELECT
-    v.entityinstance    AS SYSTEM_KEY,
+    v.entityinstance    AS FinDimCostCenterKey,
     v.displayvalue      AS CostCenter,
     ft.[description]    AS CostCenterDescription
 FROM DIMENSIONATTRIBUTE a

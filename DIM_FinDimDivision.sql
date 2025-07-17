@@ -1,5 +1,5 @@
 SELECT
-    v.entityinstance    AS SYSTEM_KEY,
+    v.entityinstance    AS FinDimDivisionKey,
     v.displayvalue      AS Division,
     ft.[description]    AS DivisionDescription
 FROM DIMENSIONATTRIBUTE a
