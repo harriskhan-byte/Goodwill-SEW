@@ -1,0 +1,4 @@
+SELECT 
+	mt.VALUE AS Amount, 
+	1 AS Quantity
+FROM MARKUPTRANS mt

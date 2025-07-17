@@ -1,0 +1,10 @@
+SELECT 
+	dpt.DATAAREA AS CompanyKey,
+	dpt.DATAAREA AS CompanyCode, 
+	dpt.NAME AS CompanyName
+FROM DIRPARTYTABLE dpt
+WHERE dpt.INSTANCERELATIONTYPE = (
+    SELECT TOP 1 RECID
+    FROM TABLEIDTABLE
+    WHERE NAME = 'CompanyInfo'
+)
