@@ -1,6 +1,6 @@
 ﻿SELECT 
     mt.VALUE                       AS Amount,
-    1                              AS Quantity,
+    1                              AS Quantity, -- quantity doesn't make sense
     mt.MARKUPCATEGORY              AS MarkupCategory,
     mt.MARKUPCODE                  AS MarkupCode,
     mt.MODULECATEGORY              AS ModuleCategory,
