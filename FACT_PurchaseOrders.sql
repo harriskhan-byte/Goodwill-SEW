@@ -1,25 +1,44 @@
-﻿/*  FACT_PurchaseOrders  – ProcurementReporting schema  */
+﻿-- CREATE VIEW ProcurementReporting.FACT_PurchaseOrders AS
+
+/*  FACT SQL Script Creation - Purchase Orders
+    Only select statement - view creation will be done by client
+    Name: FACT_PurchaseOrders
+    Location: ProcurementReporting
+
+    Fields:
+      Amount                   (purch line)
+      Quantity                 (purch line)
+      Unit Price               (req line)
+      CompanyKey
+      VendorKey
+      ProcurementCategoryKey
+      PurchaseRequisitionKey
+      VendorInvoiceKey
+      PurchaseOrderKey
+      FinDimLocationKey
+      FinDimFlexKey
+      FinDimCostCenterKey
+      FinDimDivisionKey
+*/
+
 SELECT
-    /* Measures — PurchLine grain */
-    pl.LINEAMOUNT                     AS Amount,           -- line net amount
-    pl.PURCHQTY                       AS Quantity,
-    pl.PURCHPRICE                     AS [Unit Price],
+    pl.LINEAMOUNT                     AS Amount,                -- Line net amount from purchase line
+    pl.PURCHQTY                       AS Quantity,              -- Quantity from purchase line
+    pl.PURCHPRICE                     AS [Unit Price],          -- Unit price from purchase line
 
-    /* Keys */
-    pl.DATAAREAID                     AS CompanyKey, -- More direct way to get CompanyKey
-    vt.RECID                          AS VendorKey,
-    erc.RECID                         AS ProcurementCategoryKey,
-    prt.RECID                         AS PurchaseRequisitionKey,
-    pt.RECID                          AS PurchaseOrderKey,
-    vij.RecId                         AS VendorInvoiceKey,      -- can be NULL
+    pl.DATAAREAID                     AS CompanyKey,            -- Company surrogate key
+    vt.RECID                          AS VendorKey,             -- Vendor surrogate key
+    erc.RECID                         AS ProcurementCategoryKey,-- Procurement category surrogate key
+    prt.RECID                         AS PurchaseRequisitionKey,-- Purchase requisition surrogate key
+    vij.RecId                         AS VendorInvoiceKey,      -- Vendor invoice surrogate key (can be NULL)
+    pt.RECID                          AS PurchaseOrderKey,      -- Purchase order surrogate key
 
-    /* Financial‑dimension surrogate keys */
-    locDim.ENTITYINSTANCE             AS FinDimLocationKey,
-    flexDim.ENTITYINSTANCE            AS FinDimFlexKey,
-    costDim.ENTITYINSTANCE            AS FinDimCostCenterKey,
-    divDim.ENTITYINSTANCE             AS FinDimDivisionKey
+    locDim.ENTITYINSTANCE             AS FinDimLocationKey,     -- Financial dimension: Location
+    flexDim.ENTITYINSTANCE            AS FinDimFlexKey,         -- Financial dimension: Flex
+    costDim.ENTITYINSTANCE            AS FinDimCostCenterKey,   -- Financial dimension: Cost Center
+    divDim.ENTITYINSTANCE             AS FinDimDivisionKey      -- Financial dimension: Division
 
-FROM  PURCHLINE                pl                                    -- fact grain
+FROM  PURCHLINE                pl                                    -- Fact grain: purchase line
 /* Vendor */
 LEFT JOIN VENDTABLE             vt   ON vt.DATAAREAID = pl.DATAAREAID
                                       AND vt.ACCOUNTNUM = pl.VENDACCOUNT
@@ -46,4 +65,5 @@ LEFT JOIN DEFAULTDIMENSIONVIEW  flexDim ON flexDim.DEFAULTDIMENSION = pl.DEFAULT
 LEFT JOIN DEFAULTDIMENSIONVIEW  costDim ON costDim.DEFAULTDIMENSION = pl.DEFAULTDIMENSION
                                           AND costDim.NAME = 'D002_CostCenter'
 LEFT JOIN DEFAULTDIMENSIONVIEW  divDim  ON divDim.DEFAULTDIMENSION = pl.DEFAULTDIMENSION
-                                          AND divDim.NAME = 'D001_Division';
+                                          AND divDim.NAME = 'D001_Division'
+;
