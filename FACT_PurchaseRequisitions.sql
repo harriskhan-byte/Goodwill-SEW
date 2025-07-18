@@ -30,7 +30,7 @@ SELECT
     erc.RECID AS ProcurementCategoryKey,                      -- Procurement category surrogate key
     prt.RECID AS PurchaseRequisitionKey,                      -- Purchase requisition surrogate key
     pt.RECID AS PurchaseOrderKey,                             -- Purchase order surrogate key
-    NULL AS VendorInvoiceKey,                                 -- Vendor invoice surrogate key (not available at this stage)
+    vij.RECID AS VendorInvoiceKey,                            -- Vendor invoice surrogate key (now available through chain)
     locDim.ENTITYINSTANCE AS FinDimLocationKey,               -- Financial dimension: Location
     flexDim.ENTITYINSTANCE AS FinDimFlexKey,                  -- Financial dimension: Flex
     costDim.ENTITYINSTANCE AS FinDimCostCenterKey,            -- Financial dimension: Cost Center
@@ -48,6 +48,22 @@ LEFT JOIN PURCHREQTABLE prt
 LEFT JOIN PURCHTABLE pt 
     ON pt.PURCHID = prl.PURCHID 
     AND pt.DATAAREAID = prl.PURCHIDDATAAREA                  -- Join for PurchaseOrderKey
+
+/* Extended chain to get vendor invoice */
+LEFT JOIN PURCHLINE pl
+    ON pl.PURCHID = pt.PURCHID
+    AND pl.DATAAREAID = pt.DATAAREAID
+    AND pl.PURCHREQLINEREFID = prl.LINEREFID                     -- Link purchase line to requisition line
+
+LEFT JOIN VENDINVOICETRANS vit
+    ON vit.PURCHID = pl.PURCHID
+    AND vit.INVENTTRANSID = pl.INVENTTRANSID
+    AND vit.DATAAREAID = pl.DATAAREAID                       -- Link to invoice transaction
+
+LEFT JOIN VENDINVOICEJOUR vij
+    ON vij.INVOICEID = vit.INVOICEID
+    AND vij.DATAAREAID = vit.DATAAREAID                      -- Link to invoice header
+
 LEFT JOIN DEFAULTDIMENSIONVIEW locDim 
     ON locDim.DefaultDimension = prl.DEFAULTDIMENSION 
     AND locDim.Name = 'D003_Location'                        -- Join for FinDimLocationKey
