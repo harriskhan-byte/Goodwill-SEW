@@ -1,7 +1,20 @@
+-- CREATE VIEW ProcurementReporting.DIM_FinDimDivision AS
+
+/*  DIM SQL Script Creation - Fin Dim - Division
+    Only select statement - view creation will be done by client
+    Name: DIM_FinDimDivision
+    Location: ProcurementReporting
+
+    Fields:
+      FinDimDivisionKey   (entityinstance)
+      Division            (displayvalue)
+      DivisionName        (description)
+*/
+
 SELECT
-    v.entityinstance    AS FinDimDivisionKey,
-    v.displayvalue      AS Division,
-    ft.[description]    AS DivisionDescription
+    v.entityinstance    AS FinDimDivisionKey,         -- Surrogate key for Division dimension
+    v.displayvalue      AS Division,                  -- Division code/value
+    ft.[description]    AS DivisionName               -- Division name/description
 FROM DIMENSIONATTRIBUTE a
 JOIN DIMENSIONATTRIBUTEVALUE v
   ON v.dimensionattribute = a.recid
@@ -13,4 +26,4 @@ WHERE
         SELECT 1
         FROM DIMENSIONATTRIBUTEVALUECOMBINATION vc
         WHERE vc.D001_DIVISION = v.entityinstance
-    )
+    );
