@@ -1,6 +1,6 @@
 SELECT
   payvt.AMOUNTCUR                AS Amount,
-  1                              AS Quantity,
+  1                              AS Quantity, -- in this context, quantity wouldn't really have a semantic meaning
   payvt.PAYMREFERENCE            AS PaymentReference,
   payvt.PAYMMODE                 AS PaymentMode,
   payvt.DATAAREAID               AS CompanyKey,
