@@ -1,16 +1,37 @@
-﻿SELECT 
-    mt.VALUE                       AS Amount,
-    1                              AS Quantity, -- quantity doesn't make sense
-    mt.MARKUPCATEGORY              AS MarkupCategory,
-    mt.MARKUPCODE                  AS MarkupCode,
-    mt.MODULECATEGORY              AS ModuleCategory,
-    mt.MODULETYPE                  AS ModuleType,
+﻿-- CREATE VIEW ProcurementReporting.FACT_VendorInvoiceLineCharges AS
+
+/*  FACT SQL Script Creation - Vendor Invoice Line Charges
+    Only select statement - view creation will be done by client
+    Name: FACT_VendorInvoiceLineCharges
+    Location: ProcurementReporting
+
+    Fields:
+      Amount                   (markuptrans)
+      Quantity                 (markuptrans)
+      VendorKey
+      ProcurementCategoryKey
+      PurchaseRequisitionKey
+      PurchaseOrderKey
+      VendorInvoiceKey
+      MarkupCategory           (MarkupTrans.MarkupCategory)
+      MarkupCode               (MarkupTrans.MarkupCode)
+      ModuleCategory           (MarkupTrans.ModuleCategory)
+      ModuleType               (MarkupTrans.ModuleType)
+*/
+
+SELECT 
+    mt.VALUE                       AS Amount,                  -- Charge amount from MarkupTrans
+    1                              AS Quantity,                -- Quantity (not meaningful for charges)
+    mt.MARKUPCATEGORY              AS MarkupCategory,          -- Markup category
+    mt.MARKUPCODE                  AS MarkupCode,              -- Markup code
+    mt.MODULECATEGORY              AS ModuleCategory,          -- Module category
+    mt.MODULETYPE                  AS ModuleType,              -- Module type
     
-    vt.RECID                       AS VendorKey,
-    erc.RECID                      AS ProcurementCategoryKey,
-    prt.RECID                      AS PurchaseRequisitionKey,
-    pt.RECID                       AS PurchaseOrderKey,
-    vij.RECID                      AS VendorInvoiceKey
+    vt.RECID                       AS VendorKey,               -- Vendor surrogate key
+    erc.RECID                      AS ProcurementCategoryKey,  -- Procurement category surrogate key
+    prt.RECID                      AS PurchaseRequisitionKey,  -- Purchase requisition surrogate key
+    pt.RECID                       AS PurchaseOrderKey,        -- Purchase order surrogate key
+    vij.RECID                      AS VendorInvoiceKey         -- Vendor invoice surrogate key
 
 FROM MARKUPTRANS mt
 
